@@ -1,6 +1,10 @@
+using API.Middleware;
+using Application.Activities.Commands;
 using Application.Activities.Queries;
+using Application.Activities.Validators;
 using Application.Core;
 using Application.Queries;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -8,15 +12,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
+builder.Services.AddMediatR
+    (cfg =>
+    {
+        cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
+        cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    });
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDBContext>(opt
     => opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles)); 
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles));
+builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
+builder.Services.AddTransient<ExceptionMiddleware>(); // estansiated when it's needed 
+
 builder.Services.AddCors();
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();// should be above everything else 
 app.UseCors
     (options=>options.AllowAnyHeader().AllowAnyMethod()
     .WithOrigins("http://localhost:3001","https://localhost:3001"));
