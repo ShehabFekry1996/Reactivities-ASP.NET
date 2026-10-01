@@ -16,11 +16,11 @@ namespace API.Controllers
             ??= HttpContext.RequestServices.GetService<IMediator>()
             ?? throw new InvalidOperationException("I Mediator service in unavailable");
 
-        protected ActionResult<T> HandleResult<T>(Result<T> result)
+        protected ActionResult HandleResult<T>(Result<T> result)
         {
             if (!result.IsSuccess && result.Code == 404) return NotFound();
             if (result.IsSuccess && result.Value != null)
-                return result.Value;
+                return Ok(result.Value);
             return BadRequest(result.Error);
         }
     }

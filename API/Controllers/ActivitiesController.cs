@@ -30,12 +30,12 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> CreateActivity(CreateActivityDto activityDto)
         {
-            return await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto });
+            return HandleResult(await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto }));
         }
         [HttpPut]
-        public async Task<ActionResult<Unit>> EditActivity(Activity activity)
+        public async Task<ActionResult<Unit>> EditActivity(EditActivityDto activity)
         {
-           return HandleResult(await Mediator.Send(new EditActivity.Command { Activity = activity }));
+           return HandleResult(await Mediator.Send(new EditActivity.Command { ActivityDto = activity }));
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> DeleteActivity(string id)

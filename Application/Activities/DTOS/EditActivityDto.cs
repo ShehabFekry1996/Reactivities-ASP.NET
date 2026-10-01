@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Application.Activities.DTOS
 {
-    public class CreateActivityDto : BaseActivityDto
+    public class EditActivityDto: BaseActivityDto
     {
-      
+        public string Id { get; set; } = "";
     }
 }
-    
