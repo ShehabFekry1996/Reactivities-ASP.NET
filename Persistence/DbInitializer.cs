@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,8 +9,23 @@ namespace Persistence
     public  class DbInitializer
     {
 
-        public static async Task SeedData(AppDBContext context)
+        public static async Task SeedData(AppDBContext context,UserManager<User> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                //user name must be treated like emails}
+                var users = new List<User>()
+                {
+                    new() {DisplayName = "Bob",UserName="bob@test.com",Email = "bob@test.com",Bio = "Bio of Bob" },
+                    new() {DisplayName = "Tom",UserName="tom@test.com",Email = "tom@test.com" ,Bio="Bio of tom"},
+                    new() {DisplayName = "Jane",UserName="jane@test.com",Email = "jane@test.com", Bio="Bio of tom" }
+                };
+                foreach (var user in users)
+                {
+                    // you should use password that follow rules
+                    await userManager.CreateAsync(user, "Pa$$w0rd");
+                }
+            }
             if(context.Activities.Any())
             {
                 return;

@@ -4,6 +4,7 @@ using Application.Activities.Queries;
 using Application.Queries;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -15,6 +16,7 @@ namespace API.Controllers
 
         //It's only service is to receive and respond to HTTP requests
         //The validation and other logic are related to Application 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<Activity>>> GetActivities()
         {
