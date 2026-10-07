@@ -45,7 +45,8 @@ namespace API.Controllers
                 user.Email,
                 user.UserName,
                 user.Bio,
-                user.ImageUrl
+                user.ImageUrl,
+                user.Id
             });
         }
 
