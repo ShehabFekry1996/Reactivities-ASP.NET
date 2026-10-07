@@ -18,13 +18,13 @@ namespace API.Controllers
         //The validation and other logic are related to Application 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<ActionResult<List<ActivityDto>>> GetActivities()
         {
             // THE API Controllers are thin and don't know what's going on .. on the application layer
             return await Mediator.Send(new GetActivityList.Query());
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> GetActivityDetail(string id)
+        public async Task<ActionResult<ActivityDto>> GetActivityDetail(string id)
         {
             return HandleResult(await Mediator.Send(new GetActivityDetails.Query { Id = id }));
         }

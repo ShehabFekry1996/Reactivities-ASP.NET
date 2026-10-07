@@ -3,9 +3,11 @@ using Application.Activities.Commands;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
 using Application.Core;
+using Application.Interfaces;
 using Application.Queries;
 using Domain;
 using FluentValidation;
+using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -30,6 +32,7 @@ builder.Services.AddMediatR
     });
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 builder.Services.AddDbContext<AppDBContext>(opt
     => opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles));

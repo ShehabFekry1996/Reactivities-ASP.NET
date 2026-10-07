@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,5 +13,7 @@ namespace Domain
         public string? Bio { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        public ICollection<ActivityAttendee> Activities { get; set; } = [];
     }
 }
