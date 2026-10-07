@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace Infrastructure
+namespace Infrastructure.Security
 {
     public class UserAccessor(IHttpContextAccessor httpContextAccessor,AppDBContext dbContext) : IUserAccessor
     {

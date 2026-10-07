@@ -34,15 +34,24 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto }));
         }
-        [HttpPut]
-        public async Task<ActionResult<Unit>> EditActivity(EditActivityDto activity)
+        [HttpPut("{id}")]
+        [Authorize(Policy="IsActivityHost")]
+        public async Task<ActionResult<Unit>> EditActivity(string id,EditActivityDto activity)
         {
+           activity.Id = id;
            return HandleResult(await Mediator.Send(new EditActivity.Command { ActivityDto = activity }));
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> DeleteActivity(string id)
         {
            return HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
+        }
+
+
+        [HttpPost("{id}/attend")]
+        public async Task<ActionResult> Attend(string id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
         }
     }
 }

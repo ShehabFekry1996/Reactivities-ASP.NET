@@ -7,7 +7,7 @@ using Application.Interfaces;
 using Application.Queries;
 using Domain;
 using FluentValidation;
-using Infrastructure;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -44,7 +44,14 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
 
 }).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
 
-
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("IsActivityHost", policy =>
+    {
+        policy.Requirements.Add(new IsHostRequirement());
+    });
+});
+builder.Services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
 builder.Services.AddCors();
 var app = builder.Build();
 
