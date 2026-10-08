@@ -1,4 +1,5 @@
 ﻿using Application.Activities.DTOS;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
@@ -18,11 +19,12 @@ namespace Application.Queries
 
         }
 
-        public class Handler(AppDBContext context,IMapper mapper) : IRequestHandler<Query, List<ActivityDto>>
+        public class Handler(AppDBContext context,IMapper mapper,IUserAccessor userAccessor) : IRequestHandler<Query, List<ActivityDto>>
         {
             public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await context.Activities.ProjectTo<ActivityDto>(mapper.ConfigurationProvider)
+                return await context.Activities.ProjectTo<ActivityDto>(mapper.ConfigurationProvider
+                    ,new {currentUserId = userAccessor.GetUserId()})
                     .ToListAsync(cancellationToken);
             }
         }
