@@ -1,4 +1,4 @@
-using API.Middleware;
+﻿using API.Middleware;
 using API.SignalR;
 using Application.Activities.Commands;
 using Application.Activities.Queries;
@@ -74,9 +74,13 @@ app.UseHttpsRedirection();
 app.UseAuthentication(); // must be above Authorization 
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<User>(); //api/login
 app.MapHub<CommentHub>("/api/comments");
+app.MapFallbackToController("Index", "Fallback");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
