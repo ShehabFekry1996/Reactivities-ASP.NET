@@ -13,6 +13,18 @@ namespace API.Controllers
           return HandleResult(await Mediator.Send(new AddPhoto.Command { File = file }));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetProfiles(string? search)
+        {
+            return HandleResult(await Mediator.Send(new GetProfiles.Query { Search = search }));
+        }
+
+        [HttpGet("{userId}/activities")]
+        public async Task<ActionResult> GetUserActivities(string userId, string filter = "future")
+        {
+            return HandleResult(await Mediator.Send(new GetUserActivities.Query { UserId = userId, Filter = filter }));
+        }
+
         [HttpGet("{userId}/photos")]
         public async Task<ActionResult> GetProfilePhotos(string userId)
         {

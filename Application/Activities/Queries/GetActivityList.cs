@@ -36,6 +36,19 @@ namespace Application.Queries
                         : query.Where(x => x.Date <= request.Params.Cursor.Value);
                 }
 
+                if (!string.IsNullOrEmpty(request.Params.Category))
+                {
+                    query = query.Where(x => x.Category == request.Params.Category);
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.Params.Search))
+                {
+                    var search = request.Params.Search.Trim().ToLower();
+                    query = query.Where(x => x.Title.ToLower().Contains(search)
+                        || x.City.ToLower().Contains(search)
+                        || x.Venue.ToLower().Contains(search));
+                }
+
                 query = request.Params.Filter switch
                 {
                     "isGoing" => query.Where(x => x.Attendees.Any(a => a.UserId == userId)),

@@ -37,6 +37,7 @@ namespace Application.Core
                 .ForMember(x=>x.UserId, o=>o.MapFrom(s=>s.User.Id))
                 .ForMember(x=>x.ImageUrl, o=>o.MapFrom(s=>s.User.ImageUrl));
             CreateMap<EditActivityDto, Activity>();
+            CreateMap<Activity, UserActivityDto>();
         }
     }
 }
