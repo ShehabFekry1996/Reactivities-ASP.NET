@@ -22,12 +22,9 @@ namespace Application.Profiles.Queries
             public async Task<Result<List<Photo>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var photos = await context.Photos
-                    .Where(p => p.UserId == request.UserId).ToListAsync(cancellationToken);
-                if (photos == null || photos.Count == 0)
-                {
-                    return Result<List<Photo>>.Failure("No photos found for the specified user.", 404);
-                }
-                // Assuming you want to return all photos or you can modify this logic as needed
+                    .Where(p => p.UserId == request.UserId)
+                    .ToListAsync(cancellationToken);
+
                 return Result<List<Photo>>.Success(photos);
             }
 
