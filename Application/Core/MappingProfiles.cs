@@ -22,6 +22,10 @@ namespace Application.Core
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.User.Id));
             CreateMap<CreateActivityDto, Activity>();
             CreateMap<User, UserProfile>();
+            CreateMap<Comment, CommentDto>()
+                .ForMember(x=>x.DisplayName, o=>o.MapFrom(s=>s.User.DisplayName))
+                .ForMember(x=>x.UserId, o=>o.MapFrom(s=>s.User.Id))
+                .ForMember(x=>x.ImageUrl, o=>o.MapFrom(s=>s.User.ImageUrl));
             CreateMap<EditActivityDto, Activity>();
         }
     }

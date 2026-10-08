@@ -1,4 +1,5 @@
 using API.Middleware;
+using API.SignalR;
 using Application.Activities.Commands;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
@@ -56,6 +57,7 @@ builder.Services.AddAuthorization(opt =>
 });
 builder.Services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
 
+builder.Services.AddSignalR();
 builder.Services.AddCors();
 var app = builder.Build();
 
@@ -74,6 +76,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<User>(); //api/login
+app.MapHub<CommentHub>("/api/comments");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
