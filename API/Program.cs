@@ -7,6 +7,7 @@ using Application.Interfaces;
 using Application.Queries;
 using Domain;
 using FluentValidation;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,7 @@ builder.Services.AddMediatR
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddDbContext<AppDBContext>(opt
     => opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles));
@@ -52,6 +54,8 @@ builder.Services.AddAuthorization(opt =>
     });
 });
 builder.Services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration
+    .GetSection("CloudinarySettings"));
 builder.Services.AddCors();
 var app = builder.Build();
 
