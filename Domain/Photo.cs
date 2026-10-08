@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Domain
 {
@@ -12,6 +13,12 @@ namespace Domain
         public required string Url { get; set; }
 
         public required string PublicId { get; set; }
+
+        public required string UserId { get; set; }
+
+
+        [JsonIgnore]
+        public User User { get; set; }
 
     }
 }

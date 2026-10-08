@@ -94,6 +94,7 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -326,9 +327,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Photo", b =>
                 {
-                    b.HasOne("Domain.User", null)
+                    b.HasOne("Domain.User", "User")
                         .WithMany("Photos")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

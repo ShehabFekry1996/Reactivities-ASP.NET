@@ -20,7 +20,7 @@ namespace Infrastructure.Photos
             var account = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
             cloudinary = new Cloudinary(account);
         }
-        public async Task<string> DeletePhoto(string publicId)
+        public async Task<string> DeletePhotoAsync(string publicId)
         {
             var deleteParams = new DeletionParams(publicId);
             var result = await cloudinary.DestroyAsync(deleteParams);
@@ -32,7 +32,7 @@ namespace Infrastructure.Photos
             return result.Result;
         }
 
-        public async Task<PhotoUploadResult?> UploadPhoto(IFormFile file)
+        public async Task<PhotoUploadResult?> UploadPhotoAsync(IFormFile file)
         {
             if(file.Length > 0)
             {

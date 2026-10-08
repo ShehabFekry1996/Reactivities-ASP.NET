@@ -1,0 +1,41 @@
+﻿using Application.Core;
+using Application.Interfaces;
+using MediatR;
+using Persistence;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Application.Profiles.Commands
+{
+    public class DeletePhoto
+    {
+        public class Command : IRequest<Result<Unit>>
+        {
+            public required string PhotoId { get; set; }
+        }
+
+        public class Handler(IUserAccessor userAccessor, AppDBContext context, IPhotoService photoService) : IRequestHandler<Command, Result<Unit>>
+        {
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            {
+                var user = await userAccessor.GetUserWithPhotosAsnyc();
+
+                var photo = user.Photos.FirstOrDefault(x => x.Id == request.PhotoId);
+
+                if (photo == null)
+                    return Result<Unit>.Failure("Photo not found",404);
+                if(photo.Url == user.ImageUrl)
+                    return Result<Unit>.Failure("You cannot delete your main photo", 400);
+
+                await photoService.DeletePhotoAsync(photo.PublicId);
+
+                user.Photos.Remove(photo);
+
+                var result = await context.SaveChangesAsync(cancellationToken) > 0;
+
+                return result ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Problem deleting photo", 400);
+            }
+        }
+    }
+}

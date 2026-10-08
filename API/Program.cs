@@ -31,7 +31,8 @@ builder.Services.AddMediatR
         cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
         cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
     });
-
+builder.Services.Configure<CloudinarySettings>(builder.Configuration
+    .GetSection("CloudinarySettings"));
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
@@ -54,8 +55,7 @@ builder.Services.AddAuthorization(opt =>
     });
 });
 builder.Services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
-builder.Services.Configure<CloudinarySettings>(builder.Configuration
-    .GetSection("CloudinarySettings"));
+
 builder.Services.AddCors();
 var app = builder.Build();
 
