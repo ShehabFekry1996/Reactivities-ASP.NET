@@ -1,6 +1,7 @@
 ﻿using Application.Activities.Commands;
 using Application.Activities.DTOS;
 using Application.Activities.Queries;
+using Application.Core;
 using Application.Queries;
 using Domain;
 using MediatR;
@@ -18,10 +19,10 @@ namespace API.Controllers
         //The validation and other logic are related to Application 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<List<ActivityDto>>> GetActivities()
+        public async Task<ActionResult<PagedList<ActivityDto, DateTime?>>> GetActivities([FromQuery] ActivityParams activityParams)
         {
             // THE API Controllers are thin and don't know what's going on .. on the application layer
-            return await Mediator.Send(new GetActivityList.Query());
+            return HandleResult(await Mediator.Send(new GetActivityList.Query { Params = activityParams }));
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityDto>> GetActivityDetail(string id)
