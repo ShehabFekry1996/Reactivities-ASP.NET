@@ -164,6 +164,21 @@ namespace Persistence
             }
 
             await context.SaveChangesAsync();
+
+            var seedTitles = activities.Select(x => x.Title).ToList();
+            var seeded = await context.Activities
+                .Where(x => seedTitles.Contains(x.Title))
+                .OrderBy(x => x.Date)
+                .ToListAsync();
+
+            foreach (var group in seeded.GroupBy(x => x.Category))
+            {
+                var index = 0;
+                foreach (var activity in group)
+                    activity.ImageIndex = index++ % 5;
+            }
+
+            await context.SaveChangesAsync();
         }
 
         private static string Portrait(string gender, int number) =>

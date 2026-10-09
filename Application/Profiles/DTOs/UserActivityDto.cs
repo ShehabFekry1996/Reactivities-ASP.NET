@@ -1,4 +1,4 @@
-namespace Application.Profiles.DTOs
+﻿namespace Application.Profiles.DTOs
 {
     public class UserActivityDto
     {
@@ -9,5 +9,7 @@ namespace Application.Profiles.DTOs
         public required string Category { get; set; }
 
         public DateTime Date { get; set; }
+
+        public int ImageIndex { get; set; }
     }
 }

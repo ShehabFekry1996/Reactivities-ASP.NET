@@ -19,7 +19,7 @@ namespace API.Controllers
         //The validation and other logic are related to Application 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<PagedList<ActivityDto, DateTime?>>> GetActivities([FromQuery] ActivityParams activityParams)
+        public async Task<ActionResult<PagedList<ActivityDto, string>>> GetActivities([FromQuery] ActivityParams activityParams)
         {
             // THE API Controllers are thin and don't know what's going on .. on the application layer
             return HandleResult(await Mediator.Send(new GetActivityList.Query { Params = activityParams }));

@@ -32,6 +32,8 @@ namespace Application.Activities.DTOS
 
             public double Longitude { get; set; }
 
+            public int ImageIndex { get; set; }
+
             public ICollection<UserProfile> Attendees { get; set; } = [];
         }
 }

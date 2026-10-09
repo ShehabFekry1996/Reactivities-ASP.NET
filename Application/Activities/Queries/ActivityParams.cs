@@ -2,7 +2,7 @@ using Application.Core;
 
 namespace Application.Activities.Queries
 {
-    public class ActivityParams : PaginationParams<DateTime?>
+    public class ActivityParams : PaginationParams<string>
     {
         public string? Filter { get; set; }
 

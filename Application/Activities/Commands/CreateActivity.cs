@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Application.Activities.Commands
             {
                 var user = await userAccessor.GetUserAsync();
                 var activity = mapper.Map<Activity>(request.ActivityDto);
+                activity.ImageIndex = await context.Activities
+                    .CountAsync(x => x.Category == activity.Category, cancellationToken) % 5;
 
                 var attendee = new ActivityAttendee
                 {
