@@ -74,8 +74,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication(); // must be above Authorization 
 app.UseAuthorization();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
+// must be under UseAuthorization() and UseAuthentication()
+app.UseDefaultFiles(); // look for something in wwwroot folder,
+                       // if not found then look for index.html
+app.UseStaticFiles(); // look for static files in wwwroot folder
 
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<User>(); //api/login
