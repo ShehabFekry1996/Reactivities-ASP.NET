@@ -38,7 +38,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddDbContext<AppDBContext>(opt
-    => opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles));
 builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 builder.Services.AddTransient<ExceptionMiddleware>(); // estansiated when it's needed 
@@ -91,10 +91,7 @@ try
 {
     var context = services.GetRequiredService<AppDBContext>();
     var userManager = services.GetRequiredService<UserManager<User>>();
-    Console.WriteLine(context.Database.GetConnectionString());
-    Console.WriteLine(Path.GetFullPath("reactivities.db"));
     await context.Database.MigrateAsync();
-    await context.Database.ExecuteSqlRawAsync("PRAGMA journal_mode=DELETE;");
     await DbInitializer.SeedData(context, userManager);
 }
 catch (Exception ex)

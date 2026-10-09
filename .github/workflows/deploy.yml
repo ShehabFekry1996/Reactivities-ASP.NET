@@ -1,0 +1,78 @@
+name: Build and deploy to MonsterASP.NET
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [client-updated]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout API
+        uses: actions/checkout@v4
+        with:
+          path: Reactivities-ASP.NET
+
+      - name: Checkout client
+        uses: actions/checkout@v4
+        with:
+          repository: ShehabFekry1996/Reactivities
+          ref: main
+          path: Reactivities
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Reactivities/package-lock.json
+
+      - name: Build client into API/wwwroot
+        working-directory: Reactivities
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish API
+        working-directory: Reactivities-ASP.NET
+        run: dotnet publish API/API.csproj --configuration Release --runtime win-x86 --self-contained false --output ../publish
+
+      - name: Write production settings
+        shell: pwsh
+        env:
+          DB_CONNECTION: ${{ secrets.DB_CONNECTION_STRING }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        run: |
+          @{
+            ConnectionStrings = @{ DefaultConnection = $env:DB_CONNECTION }
+            CloudinarySettings = @{
+              CloudName = $env:CLOUDINARY_CLOUD_NAME
+              ApiKey = $env:CLOUDINARY_API_KEY
+              ApiSecret = $env:CLOUDINARY_API_SECRET
+            }
+          } | ConvertTo-Json -Depth 5 | Set-Content -Path publish/appsettings.Production.json -Encoding utf8
+
+      - name: Deploy via WebDeploy
+        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
+          source-path: '\publish\'
