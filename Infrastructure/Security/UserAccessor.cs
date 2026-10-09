@@ -25,7 +25,7 @@ namespace Infrastructure.Security
         public string GetUserId()
         {
             return httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) // gives you id
-                ?? throw new Exception("No user found"); 
+                ?? throw new UnauthorizedAccessException("No user found"); 
         }
     }
 }

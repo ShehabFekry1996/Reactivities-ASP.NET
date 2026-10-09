@@ -11,6 +11,7 @@ using FluentValidation;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,7 @@ builder.Services.AddDbContext<AppDBContext>(opt
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles));
 builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 builder.Services.AddTransient<ExceptionMiddleware>(); // estansiated when it's needed 
+builder.Services.AddDataProtection().PersistKeysToDbContext<AppDBContext>();
 builder.Services.AddIdentityApiEndpoints<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;

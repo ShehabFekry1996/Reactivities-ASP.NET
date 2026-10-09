@@ -18,6 +18,10 @@ namespace API.Middleware
 			{
 				await HandleValidationException(context, ex);
 			}
+			catch (UnauthorizedAccessException)
+			{
+				context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+			}
 			catch (Exception ex)
 			{
 				await HandleException(context, ex);

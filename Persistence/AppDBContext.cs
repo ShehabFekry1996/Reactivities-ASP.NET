@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace Persistence
 {
-    public class AppDBContext(DbContextOptions<AppDBContext> options) : IdentityDbContext<User>(options)
+    public class AppDBContext(DbContextOptions<AppDBContext> options) : IdentityDbContext<User>(options), IDataProtectionKeyContext
     {
         public required DbSet<Activity> Activities { get; set;  }
 
@@ -17,6 +18,8 @@ namespace Persistence
         public required DbSet<Comment> Comments { get; set; }
 
         public required DbSet<UserFollowing> UserFollowings { get; set; }
+
+        public required DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder); // keep it 
